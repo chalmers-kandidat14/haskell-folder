@@ -1,13 +1,27 @@
 
 import System.Random
+import Control.Monad.State
 
 
-type Q s = (StdGen -> s -> (s, Float, Float, StdGen))
-type P s = (s -> Float)
+type Rnd s = State StdGen s
+type Q   s = s -> Rnd (s, Float, Float)
+type P   s = s -> Rnd Float
 
-metro :: StdGen -> s -> P s -> Q s -> [s]
-metro s x p q = x : metro s'' (if u <= a then y else x) p q
-  where
-    (u, s')          = randomR (0.0, 1.0) s
-    (y, p1, p2, s'') = q s' x
-    a                = min (((p y) * p2) / ((p x) * p1)) 1
+
+randomSt :: Random a => Rnd a
+randomSt = state random
+
+randomRSt :: Random a => (a,a) -> Rnd a
+randomRSt = state . randomR
+
+metro :: P s -> Q s -> s -> Rnd [s]
+metro p q x = do
+  u  <- randomRSt (0.0, 1.0)
+  (y, p1, p2) <- q x
+  px <- p x
+  py <- p y
+  let a = min 1 $ (p2 * py) / (p1 * px)
+  xs <- metro p q $ if u <= a then y else x
+  return $ x : xs
+
+

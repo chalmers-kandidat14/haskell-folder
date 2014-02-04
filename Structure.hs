@@ -1,5 +1,6 @@
 
 import Control.Monad (mapM_)
+import Data.List (elemIndex)
 
 data Coord = Coord { xCoord :: Int, yCoord :: Int } deriving (Eq)
 
@@ -14,10 +15,12 @@ showRow chain j =
     where
         gridrow = [Coord x j | x <- [1..xMax]]
         xMax = maximum . map xCoord $ chain
-        print cell output
-            | cell `elem` chain = 'X':output
-            | otherwise          = ' ':output
-
+        addSpace str =  if length str < 2
+                        then addSpace (' ':str)
+                        else str
+        print cell output = case elemIndex cell chain of
+                                Nothing -> "  " ++ output
+                                Just i -> addSpace (show i) ++ output
 
 showRows :: [Coord] -> [String]
 showRows coords = map (showRow coords) [1..yMax]

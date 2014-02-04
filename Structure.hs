@@ -5,7 +5,7 @@ import Data.List (elemIndex)
 data Coord = Coord { xCoord :: Int, yCoord :: Int } deriving (Eq)
 
 instance Show Coord where
-   show (Coord x y) = (show x) ++ "x" ++ (show y)
+   show (Coord x y) = show x ++ "x" ++ show y
 
 type Chain = [Coord]
 
@@ -28,9 +28,9 @@ showRows coords = map (showRow coords) [1..yMax]
         yMax = maximum . map yCoord $ coords
 
 myChain :: Chain
-myChain = (Coord 1 1) : (Coord 1 2) : (Coord 2 2) : (Coord 3 2) : 
-          (Coord 3 1) : (Coord 4 1) : (Coord 4 2) : (Coord 4 3) :
-          (Coord 4 4) : (Coord 5 4) : (Coord 6 4) : (Coord 6 3) : []
+myChain = [Coord 1 1, Coord 1 2, Coord 2 2, Coord 3 2, 
+          Coord 3 1, Coord 4 1, Coord 4 2, Coord 4 3,
+          Coord 4 4, Coord 5 4, Coord 6 4, Coord 6 3]
 
 
 main :: IO ()

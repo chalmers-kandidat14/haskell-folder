@@ -15,11 +15,11 @@ showRow chain j =
     where
         gridrow = [Coord x j | x <- [1..xMax]]
         xMax = maximum . map xCoord $ chain
-        addSpace str =  if length str < 2
+        addSpace str =  if length str < 3
                         then addSpace (' ':str)
                         else str
         print cell output = case elemIndex cell chain of
-                                Nothing -> "  " ++ output
+                                Nothing -> "   " ++ output
                                 Just i -> addSpace (show i) ++ output
 
 showRows :: [Coord] -> [String]
@@ -30,7 +30,7 @@ showRows coords = map (showRow coords) [1..yMax]
 myChain :: Chain
 myChain = (Coord 1 1) : (Coord 1 2) : (Coord 2 2) : (Coord 3 2) : 
           (Coord 3 1) : (Coord 4 1) : (Coord 4 2) : (Coord 4 3) :
-          (Coord 4 4) : []
+          (Coord 4 4) : (Coord 5 4) : (Coord 6 4) : (Coord 6 3) : []
 
 
 main :: IO ()

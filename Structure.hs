@@ -1,5 +1,3 @@
-
-import Control.Monad (mapM_)
 import Data.List (elemIndex)
 
 data Coord = Coord { xCoord :: Int, yCoord :: Int } deriving (Eq)
@@ -22,8 +20,8 @@ showRow chain j =
                                 Nothing -> "   " ++ output
                                 Just i -> addSpace (show i) ++ output
 
-showRows :: [Coord] -> [String]
-showRows coords = map (showRow coords) [1..yMax]
+showRows :: [Coord] -> String
+showRows coords = unlines $ map (showRow coords) [1..yMax]
     where
         yMax = maximum . map yCoord $ coords
 
@@ -34,4 +32,4 @@ myChain = [Coord 1 1, Coord 1 2, Coord 2 2, Coord 3 2,
 
 
 main :: IO ()
-main = mapM_ putStrLn (showRows myChain) 
+main = putStr (showRows myChain) 

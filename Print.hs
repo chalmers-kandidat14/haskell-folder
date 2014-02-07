@@ -13,7 +13,7 @@ type Chain = [Coord]
 type AChain = Array Int Coord
 
 adj :: Coord -> Coord -> Bool
-adj a b = abs (xCoord a - xCoord b) + abs (xCoord a - yCoord b) == 1
+adj a b = abs (xCoord a - xCoord b) + abs (yCoord a - yCoord b) == 1
 
 dadj :: Coord -> Coord -> Bool
 dadj a b =  abs (xCoord a - xCoord b) == 1 &&  abs (xCoord a - yCoord b) == 1

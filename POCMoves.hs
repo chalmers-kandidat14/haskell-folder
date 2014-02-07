@@ -30,7 +30,7 @@ pull ch i (c, l) | ch!(i-1) == c = [l]
 		follow j | j == low - 1 = []
 			 | j == low = [ch!(j+2)]
 			 | (ch!(j+2)) `adj` (ch!(j-1)) = [ch!(j+2)] 
-	  		 | otherwise = ch!(i+2):(follow (i-1))
+	  		 | otherwise = ch!(j+2):(follow (j-1))
 
 valCLs :: AChain -> Int -> [(Coord, Coord)]
 valCLs ch i = filter (empty ch . snd) $ filter (valC . fst) $ neighbors (ch!i) (ch!(i+1))

@@ -6,7 +6,7 @@ import Data.Array
 data Coord = Coord {xCoord :: Int, yCoord :: Int} deriving (Eq)
 
 instance Show Coord where
-    show c = show (xCoord c) ++ "." ++ show (yCoord c)
+    show c = show (xCoord c) ++ "-" ++ show (yCoord c)
 
 type Chain = [Coord]
 

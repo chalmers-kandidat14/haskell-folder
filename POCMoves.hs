@@ -15,6 +15,9 @@ doMove :: AChain -> Int -> Direction -> Chain -> Chain
 doMove ch i Up move = reverse $ doMove (revChain ch) (revInRng (bounds ch) i) Down move
 doMove ch i Down move = let ch' = elems ch in take (i - length move) ch' ++ reverse move ++ drop i ch'
 
+--allPulls :: Chain -> [Chain]
+--allPulls ch = concat $ map (\
+
 pullMoves :: AChain -> Int -> Direction -> [Chain]
 pullMoves ch i dir | not iValid = []
 		   | dir == Up = pullMoves (revChain ch) (revInRng (bounds ch) i) Down

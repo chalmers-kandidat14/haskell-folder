@@ -12,7 +12,7 @@ revChain :: AChain -> AChain
 revChain ch = ixmap (bounds ch) (revInRng (bounds ch)) ch
 
 doMove :: AChain -> Int -> Direction -> Chain -> Chain
-doMove ch i Up move = doMove (revChain ch) (revInRng (bounds ch) i) Down move
+doMove ch i Up move = reverse $ doMove (revChain ch) (revInRng (bounds ch) i) Down move
 doMove ch i Down move = let ch' = elems ch in take (i - length move) ch' ++ reverse move ++ drop i ch'
 
 pullMoves :: AChain -> Int -> Direction -> [Chain]

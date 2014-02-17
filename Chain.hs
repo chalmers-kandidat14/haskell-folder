@@ -1,3 +1,5 @@
+
+
 import Data.List (elemIndex)
 
 data Coord = Coord { xCoord :: Int, yCoord :: Int } deriving (Eq)
@@ -31,5 +33,5 @@ myChain = [Coord 1 1, Coord 1 2, Coord 2 2, Coord 3 2,
           Coord 4 4, Coord 5 4, Coord 6 4, Coord 6 3]
 
 
-main :: IO ()
-main = putStr (showRows myChain) 
+printChain :: Chain -> IO ()
+printChain = putStr . showRows

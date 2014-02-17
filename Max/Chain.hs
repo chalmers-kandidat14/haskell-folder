@@ -1,4 +1,4 @@
-
+module Chain where
 
 import Data.List (elemIndex)
 
@@ -31,7 +31,6 @@ myChain :: Chain
 myChain = [Coord 1 1, Coord 1 2, Coord 2 2, Coord 3 2, 
           Coord 3 1, Coord 4 1, Coord 4 2, Coord 4 3,
           Coord 4 4, Coord 5 4, Coord 6 4, Coord 6 3]
-
 
 printChain :: Chain -> IO ()
 printChain = putStr . showRows

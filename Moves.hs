@@ -16,20 +16,21 @@ data Move a = Move { before :: Chain a
 instance Show (Move a) where
     show (Move _ _ id) = show id
 
-doMove :: PullMove a -> Chain a
-doMove (PullMove ch i Up move) = undefined
-doMove (PullMove ch i Down move) = undefined
-
-pullMoves :: Chain -> [Move]
+pullMoves :: Chain a -> [Move a]
 pullMoves = undefined
 
-generatePullMoves' :: Chain -> Int -> Direction -> [Move]
-generatePullMoves' ch i Up = let ch' = reverse ch
-                            i'   = (length ch) - i - 1
-                            diffs = map (pull ch' i') (nearbyPointPairs ch' i')
-                          in map (Move ch i Up) diffs
-generatePullMoves' ch i Down = let diffs = map (pull ch i) (nearbyPointPairs ch i)
-                          in map (Move ch i Down) diffs
+generatePullMoves :: (Show a, Coord a) => Chain a -> Int -> Direction -> [Move a]
+generatePullMoves ch i Up = undefined 
+                where 
+                    ch'   = cReverse ch
+                    i'    = i - 1 -- We have to put in length ch here
+                    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
+                            
+generatePullMoves ch i Down = map f diffs
+                where 
+                    diffs = map (pull ch i) (nearbyPointPairs ch i)
+                    f diff = Move ch (replace ch (i-1-length diff) diff) msg
+                    msg    = (show (ch!i)) ++ " down"
 
 pull :: Coord a => Chain a -> Int -> (a, a) -> [a]
 pull ch i (c, l) | ch!(i-1) == c = [l]
@@ -40,8 +41,8 @@ pull ch i (c, l) | ch!(i-1) == c = [l]
                  | ( ch!(j+2) ) `adj` ( ch!(j-1) ) = ch!(j+2) : []
                  | otherwise = ch!(j+2) : (follow (j-1))
 
-nearbyPointsPairs :: Coord a => Chain a -> Int -> [(a, a)]
-nearbyPointsPairs ch i = filter ((cEmpty ch) . snd) $ -- L must be empty
+nearbyPointPairs :: Coord a => Chain a -> Int -> [(a, a)]
+nearbyPointPairs ch i = filter ((cEmpty ch) . snd) $ -- L must be empty
                          filter (valid . fst) $       -- C must be empty or contain i-1
                          neighbors (ch!i) (ch!(i+1)) 
     where valid coord = cEmpty ch coord || coord == (ch!(i-1))

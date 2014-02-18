@@ -22,6 +22,16 @@ showRow chain j =
                                 Nothing -> "   " ++ output
                                 Just i -> addSpace (show i) ++ output
 
+min :: Chain -> Coord
+min ch = Coord x y
+    where 
+        x = minimum . map xCoord $ ch
+        y = minimum . map yCoord $ ch
+
+translate :: Coord -> Chain -> Chain
+translate (Coord x y) = let f (Coord x' y') = Coord (x+x') (y+y') 
+                        in map f
+
 showRows :: [Coord] -> String
 showRows coords = unlines $ map (showRow coords) [1..yMax]
     where

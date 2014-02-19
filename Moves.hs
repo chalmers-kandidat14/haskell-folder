@@ -4,8 +4,6 @@ import Chain
 import Coord
 import Examples
 
-
-
 data Direction = Up | Down deriving (Eq)
 
 data Move a = Move { before :: Chain a

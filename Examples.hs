@@ -1,8 +1,7 @@
 module Examples where
 
-import Chain
 import Coord
-import Print 
+import Chain
 
 myChain :: Chain Coord2d
 myChain = fromList [Coord2d 1 1, Coord2d 1 2, Coord2d 2 2, Coord2d 3 2, 

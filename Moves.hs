@@ -16,8 +16,11 @@ data Move a = Move { before :: Chain a
 instance Show (Move a) where
     show (Move _ _ id) = show id
 
-pullMoves :: Chain a -> [Move a]
-pullMoves = undefined
+pullMoves :: (Coord a, Show a) => Chain a -> [Move a]
+pullMoves ch = do
+    dir <- [Up, Down]
+    i   <- [2..(cLength ch -2)]
+    generatePullMoves ch i dir
 
 generatePullMoves :: (Show a, Coord a) => Chain a -> Int -> Direction -> [Move a]
 generatePullMoves ch i Up = map f diffs

@@ -25,8 +25,8 @@ generatePullMoves ch i Up = map f diffs
                     ch'   = cReverse ch
                     i'    = cLength ch - i - 1 -- We have to put in length ch here
                     f diff = Move ch (replace ch i diff) msg
-		    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
-		    msg = (show (ch!i)) ++ " up"
+                    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
+                    msg = (show (ch!i)) ++ " up"
                             
 generatePullMoves ch i Down = map f diffs
                 where 

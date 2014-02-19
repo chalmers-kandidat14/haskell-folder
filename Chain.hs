@@ -37,6 +37,9 @@ cReverse = fromVector . V.reverse . toVector
 (!) :: Chain a -> Int -> a
 (!) ch i = (toVector ch) V.! i 
 
+cLength :: Chain a -> Int
+cLength = V.length . toVector
+
 replace :: (Ord a) => Chain a -> Int -> [a] -> Chain a
 replace ch i diff = fromVector $ (toVector ch) V.// (zip [i..] diff)
 

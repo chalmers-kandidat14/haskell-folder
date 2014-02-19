@@ -20,16 +20,18 @@ pullMoves :: Chain a -> [Move a]
 pullMoves = undefined
 
 generatePullMoves :: (Show a, Coord a) => Chain a -> Int -> Direction -> [Move a]
-generatePullMoves ch i Up = undefined 
+generatePullMoves ch i Up = map f diffs
                 where 
                     ch'   = cReverse ch
-                    i'    = i - 1 -- We have to put in length ch here
-                    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
+                    i'    = cLength ch - i - 1 -- We have to put in length ch here
+                    f diff = Move ch (replace ch i diff) msg
+		    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
+		    msg = (show (ch!i)) ++ " up"
                             
 generatePullMoves ch i Down = map f diffs
                 where 
                     diffs = map (pull ch i) (nearbyPointPairs ch i)
-                    f diff = Move ch (replace ch (i-1-length diff) diff) msg
+                    f diff = Move ch (replace ch (i+1-length diff) (reverse diff)) msg
                     msg    = (show (ch!i)) ++ " down"
 
 pull :: Coord a => Chain a -> Int -> (a, a) -> [a]

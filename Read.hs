@@ -1,0 +1,20 @@
+module Read where
+
+import Chain
+import Coord
+import Data.List
+import Data.Maybe
+import Data.Either
+import Text.CSV
+
+fromNumGrid :: [[Int]] -> Chain Coord2d
+fromNumGrid grid = Chain.fromList $ map resCoord [1..(maxRes grid)]
+	where
+		maxRes = maximum . concat
+		resCoord i = Coord2d (xRes i) (yRes i)
+		xRes i = head $ catMaybes $ (map (elemIndex i) grid)
+		yRes i = fromJust $ elemIndex True (map (elem i) grid)
+
+csvToNumGrid :: String -> [[Int]]
+csvToNumGrid str = let Right csv = Text.CSV.parseCSV "" str in map (map read) csv
+

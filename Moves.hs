@@ -46,5 +46,5 @@ pull ch i (c, l) | ch!(i-1) == c = [l]
 nearbyPointPairs :: Coord a => Chain a -> Int -> [(a, a)]
 nearbyPointPairs ch i = filter ((cEmpty ch) . snd) $ -- L must be empty
                          filter (valid . fst) $       -- C must be empty or contain i-1
-                         neighbors (ch!i) (ch!(i+1)) 
+                         neighborPairs (ch!i) (ch!(i+1)) 
     where valid coord = cEmpty ch coord || coord == (ch!(i-1))

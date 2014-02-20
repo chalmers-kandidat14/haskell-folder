@@ -5,7 +5,7 @@ module Chain (
              , cReverse
              , cEmpty
              , cLength
-             , cContains
+             , cIndex
              , (!)
              , replace
              ) where
@@ -19,7 +19,7 @@ newtype Memb a = M (a, Int)
 instance (Ord a) => Ord (Memb a) where
     compare (M (a, _)) (M (b, _)) = compare a b
 
-instance Eq a => Eq (Memb a) where
+instance (Eq a) => Eq (Memb a) where
     (==) (M (a, _)) (M (b, _)) = a == b 
 
 data Chain a = Chain (V.Vector a)          -- A list of our coordinates in chain order
@@ -30,7 +30,7 @@ toVector :: Chain a -> V.Vector a
 toVector (Chain v _) = v
 
 fromVector :: (Ord a) => V.Vector a -> Chain a
-fromVector v = Chain v $ S.fromList $ map M $ zip (V.toList v) [0..]
+fromVector v = Chain v (S.fromList . map M $ zip (V.toList v) [0..])
     
 
 -- Public functions
@@ -56,8 +56,8 @@ replace ch i diff = fromVector $ (toVector ch) V.// (zip [i..] diff)
 cEmpty :: (Ord a) => Chain a -> a -> Bool
 cEmpty (Chain _ sorted) element = not $ (M (element,0)) `S.member` sorted
 
-cContains :: (Ord a) => Chain a -> a -> Maybe Int
-cContains ch@(Chain _ sorted) elem = if cEmpty ch elem 
+cIndex :: (Ord a) => Chain a -> a -> Maybe Int
+cIndex ch@(Chain _ sorted) elem = if cEmpty ch elem 
                                      then Nothing
                                      else index
                      where

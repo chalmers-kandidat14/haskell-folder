@@ -4,8 +4,6 @@ import Chain
 import Coord
 import Examples
 
-
-
 data Direction = Up | Down deriving (Eq)
 
 data Move a = Move { before :: Chain a
@@ -16,8 +14,11 @@ data Move a = Move { before :: Chain a
 instance Show (Move a) where
     show (Move _ _ id) = show id
 
-pullMoves :: Chain a -> [Move a]
-pullMoves = undefined
+pullMoves :: (Coord a, Show a) => Chain a -> [Move a]
+pullMoves ch = do
+    dir <- [Up, Down]
+    i   <- [2..(cLength ch -2)]
+    generatePullMoves ch i dir
 
 generatePullMoves :: (Show a, Coord a) => Chain a -> Int -> Direction -> [Move a]
 generatePullMoves ch i Up = map f diffs
@@ -25,8 +26,8 @@ generatePullMoves ch i Up = map f diffs
                     ch'   = cReverse ch
                     i'    = cLength ch - i - 1 -- We have to put in length ch here
                     f diff = Move ch (replace ch i diff) msg
-		    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
-		    msg = (show (ch!i)) ++ " up"
+                    diffs = map (pull ch' i') (nearbyPointPairs ch' i')
+                    msg = (show (ch!i)) ++ " up"
                             
 generatePullMoves ch i Down = map f diffs
                 where 

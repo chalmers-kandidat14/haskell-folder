@@ -4,6 +4,7 @@ module Chain (
              , toList
              , cReverse
              , cEmpty
+             , cLength
              , (!)
              , replace
              ) where

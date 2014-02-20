@@ -1,13 +1,14 @@
+{-#LANGUAGE FlexibleInstances#-}
 module Print (printChain) where
 
 import Chain
 import Coord
-import Examples
 import Moves
 import Data.List (elemIndex)
 
 printChain :: Chain Coord2d -> IO ()
 printChain = putStr . showRows
+
 
 printSimilar :: Chain Coord2d -> IO ()
 printSimilar ch = mapM_ f (pullMoves ch)
@@ -33,4 +34,7 @@ showRow chain j =
         print cell output = case elemIndex cell chain of
                                 Nothing -> "   " ++ output
                                 Just i -> addSpace (show i) ++ output
+
+instance Show (Chain Coord2d) where
+        show = showRows
 

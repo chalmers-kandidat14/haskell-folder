@@ -1,4 +1,4 @@
-module Read where
+module Read (csvToChain)  where
 
 import Chain
 import Coord
@@ -6,6 +6,12 @@ import Data.List
 import Data.Maybe
 import Data.Either
 import Text.CSV
+
+--Takes a string formatted as a csv matrix. A cell with 0
+--means that position is empty, a cell with integer i>0 means
+--that position contains residue i in the chain.
+csvToChain :: String -> Chain Coord2d
+csvToChain = fromNumGrid . csvToNumGrid
 
 fromNumGrid :: [[Int]] -> Chain Coord2d
 fromNumGrid grid = Chain.fromList $ map resCoord [1..(maxRes grid)]

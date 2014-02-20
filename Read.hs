@@ -1,4 +1,4 @@
-module Read (csvToChain)  where
+module Read  where
 
 import Chain
 import Coord

@@ -46,4 +46,3 @@ replace ch i diff = fromVector $ (toVector ch) V.// (zip [i..] diff)
 
 cEmpty :: (Ord a) => Chain a -> a -> Bool
 cEmpty (Chain _ sorted) element = not $ element `S.member` sorted
-

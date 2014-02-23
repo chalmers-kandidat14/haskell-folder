@@ -7,6 +7,7 @@ module Chain (
              , cLength
              , cIndex
              , (!)
+             , (!?)
              , replace
              ) where
 
@@ -46,6 +47,9 @@ cReverse = fromVector . V.reverse . toVector
 
 (!) :: Chain a -> Int -> a
 (!) ch i = (toVector ch) V.! i 
+
+(!?) :: Chain a -> Int -> Maybe a
+(!?) ch i = (toVector ch) V.!? i
 
 cLength :: Chain a -> Int
 cLength = V.length . toVector

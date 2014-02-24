@@ -32,6 +32,10 @@ data Candidate s = Candidate { candidate     :: s
                              , probabilities :: (Double, Double)
                              }
 
+-- Select one element at random from a list
+pick :: (PrimMonad m) => [a] -> Gen (PrimState m) -> m a
+pick xs gen = uniformR (0, (length xs)-1) gen >>= return . (xs!!)
+
 -- The type of the scoring function.
 type Pi s = s -> Double
 

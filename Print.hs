@@ -12,7 +12,7 @@ printChain = putStr . showRows
 
 printSimilar :: Chain Coord2d -> IO ()
 printSimilar ch = mapM_ f (pullMoves ch)
-    where f m = (putStrLn "------" >> (printChain . after $ m))
+    where f m = putStrLn "------" >> (printChain . after $ m)
 
 showRows :: Chain Coord2d -> String
 showRows chain = unlines $ map (showRow coords) [yMin..yMax]

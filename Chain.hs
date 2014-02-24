@@ -46,19 +46,19 @@ cReverse :: Ord a => Chain a -> Chain a
 cReverse = fromVector . V.reverse . toVector
 
 (!) :: Chain a -> Int -> a
-(!) ch i = (toVector ch) V.! i 
+(!) ch i = toVector ch V.! i 
 
 (!?) :: Chain a -> Int -> Maybe a
-(!?) ch i = (toVector ch) V.!? i
+(!?) ch i = toVector ch V.!? i
 
 cLength :: Chain a -> Int
 cLength = V.length . toVector
 
 replace :: (Ord a) => Chain a -> Int -> [a] -> Chain a
-replace ch i diff = fromVector $ (toVector ch) V.// (zip [i..] diff)
+replace ch i diff = fromVector $ toVector ch V.// zip [i..] diff
 
 cEmpty :: (Ord a) => Chain a -> a -> Bool
-cEmpty (Chain _ sorted) element = not $ (M (element,0)) `S.member` sorted
+cEmpty (Chain _ sorted) element = not $ M (element,0) `S.member` sorted
 
 cIndex :: (Ord a) => Chain a -> a -> Maybe Int
 cIndex ch@(Chain _ sorted) elem = if cEmpty ch elem 

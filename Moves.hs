@@ -26,25 +26,25 @@ generatePullMoves ch i Up = map f diffs
                     i'    = cLength ch - i - 1 -- We have to put in length ch here
                     f diff = Move ch (replace ch i diff) msg
                     diffs = map (pull ch' i') (nearbyPointPairs ch' i')
-                    msg = (show (ch!i)) ++ " up"
+                    msg = show (ch!i) ++ " up"
                             
 generatePullMoves ch i Down = map f diffs
                 where 
                     diffs = map (pull ch i) (nearbyPointPairs ch i)
                     f diff = Move ch (replace ch (i+1-length diff) (reverse diff)) msg
-                    msg    = (show (ch!i)) ++ " down"
+                    msg    = show (ch!i) ++ " down"
 
 pull :: Coord a => Chain a -> Int -> (a, a) -> [a]
 pull ch i (c, l) | ch!(i-1) == c = [l]
-                 | otherwise     = l:c:(follow (i-2))
+                 | otherwise     = l:c:follow (i-2)
       where 
         follow 0 = [ ch ! 2 ]
         follow j | j < 0 = []
-                 | ( ch!(j+2) ) `adj` ( ch!(j-1) ) = ch!(j+2) : []
-                 | otherwise = ch!(j+2) : (follow (j-1))
+                 | ( ch!(j+2) ) `adj` ( ch!(j-1) ) = [ch!(j+2)]
+                 | otherwise = ch!(j+2) : follow (j-1)
 
 nearbyPointPairs :: Coord a => Chain a -> Int -> [(a, a)]
-nearbyPointPairs ch i = filter ((cEmpty ch) . snd) $ -- L must be empty
+nearbyPointPairs ch i = filter (cEmpty ch . snd) $ -- L must be empty
                          filter (valid . fst) $       -- C must be empty or contain i-1
                          neighborPairs (ch!i) (ch!(i+1)) 
     where valid coord = cEmpty ch coord || coord == (ch!(i-1))

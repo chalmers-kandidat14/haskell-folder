@@ -18,7 +18,7 @@ fromNumGrid grid = Chain.fromList $ map resCoord [1..(maxRes grid)]
 	where
 		maxRes = maximum . concat
 		resCoord i = Coord2d (xRes i) (yRes i)
-		xRes i = head $ catMaybes $ (map (elemIndex i) grid)
+		xRes i = head $ mapMaybes (elemIndex i) grid
 		yRes i = fromJust $ elemIndex True (map (elem i) grid)
 
 csvToNumGrid :: String -> [[Int]]

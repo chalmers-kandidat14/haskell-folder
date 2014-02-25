@@ -47,8 +47,15 @@ createChain n = fromList [Coord2d 1 x | x <- [1..n]]
 score :: (Coord a) => Chain a -> Double
 score ch = undefined -- exp $ - (energy myRes ch)
 
+run :: String -> String -> IO ()
+run input iterations = do    
+    let residues = V.fromList $ createResidues input
+    let chain = createChain (V.length residues)
+    let score ch = exp $ - (energy residues ch)
+    run' score chain residues (read iterations)
+
 -- Run the algorithm!
-run score chain residues n = withSystemRandom $ \g -> 
+run' score chain residues n = withSystemRandom $ \g -> 
             metropolisHastings n score generateCandidate chain g >>=
             \(xs, i) -> do
             printHP residues $ last xs
@@ -60,8 +67,4 @@ run score chain residues n = withSystemRandom $ \g ->
 main :: IO ()
 main = do
     (input:iterations:_) <- getArgs
-    let residues = V.fromList $ createResidues input
-    let chain = createChain (V.length residues)
-    let score ch = exp $ - (energy residues ch)
-    run score chain residues (read iterations)
-
+    run input iterations

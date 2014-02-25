@@ -1,4 +1,9 @@
 {-# LANGUAGE RankNTypes #-}
+module Metro (
+               Candidate (..)
+             , metropolisHastings
+             , pick
+             ) where
 
 import System.Random.MWC --This requires that the mwc-random
 

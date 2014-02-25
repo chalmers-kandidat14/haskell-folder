@@ -1,4 +1,9 @@
-module Moves where 
+module Moves (
+               pullMoves
+             , Move (..)
+             , Direction (..)
+             , generatePullMoves
+             ) where 
 
 import Chain
 import Coord

@@ -1,28 +1,42 @@
 {-#LANGUAGE FlexibleInstances#-}
-module Print (printChain) where
+module Print (
+               printChain
+             , printHP
+             , printSimilar
+             ) where
 
 import Chain
 import Coord
 import Moves
+import Energy
+import qualified Data.Vector as V
 import Data.List (elemIndex)
 
 printChain :: Chain Coord2d -> IO ()
 printChain = putStr . showRows
 
+printHP :: V.Vector HPResidue -> Chain Coord2d -> IO ()
+printHP res ch = putStr $ showRowsWith disp ch
+    where disp i = case res V.! i of
+                   H -> "H"
+                   P -> "P"
 
 printSimilar :: Chain Coord2d -> IO ()
 printSimilar ch = mapM_ f (pullMoves ch)
     where f m = putStrLn "------" >> (printChain . after $ m)
 
-showRows :: Chain Coord2d -> String
-showRows chain = unlines $ map (showRow coords) [yMin..yMax]
+showRowsWith :: (Int -> String) -> Chain Coord2d -> String
+showRowsWith disp chain = unlines $ map (showRowWith disp coords) [yMin..yMax]
     where
         coords = toList chain
         yMin = minimum . map yCoord $ coords
         yMax = maximum . map yCoord $ coords
 
-showRow ::  [Coord2d] -> Int -> String
-showRow chain j = 
+showRows :: Chain Coord2d -> String
+showRows = showRowsWith show 
+
+showRowWith ::  (Int -> String) -> [Coord2d] -> Int -> String
+showRowWith disp chain j = 
     foldr print "" gridrow
     where
         gridrow = [Coord2d x j | x <- [xMin..xMax]]
@@ -33,7 +47,7 @@ showRow chain j =
                         else str
         print cell output = case elemIndex cell chain of
                                 Nothing -> "   " ++ output
-                                Just i -> addSpace (show i) ++ output
+                                Just i -> addSpace (disp i) ++ output
 
 instance Show (Chain Coord2d) where
         show = showRows

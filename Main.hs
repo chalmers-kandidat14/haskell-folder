@@ -34,26 +34,26 @@ createChain :: Int -> Chain Coord2d
 createChain n = fromList [Coord2d 1 x | x <- [1..n]]
 
 
--- We calculate the score with e^(-E)
-score :: (Coord a) => Chain a -> Double
-score ch = undefined -- exp $ - (energy myRes ch)
+generateTemps :: Int -> [Double]
+generateTemps n = [f t | t <- [0..n]]
+    where f = (*100000000000000000000000000000000) . exp . fromIntegral . (0-)
 
 run :: String -> Int -> IO ()
 run input iterations = do    
     let residues = V.fromList $ createResidues input
     let chain = createChain (V.length residues)
-    let score ch = exp $ - (energy residues ch)
-    run' score chain residues iterations
+    let temps = generateTemps iterations
+    let score temp ch = exp $ - ((energy residues ch) / temp)
+    run' score chain residues temps
 
 -- Run the algorithm!
-run' score chain residues n = withSystemRandom $ \g -> 
-            metropolisHastings n score generateCandidate chain g >>=
-            \(xs, i) -> do
-            printHP residues $ last xs
+run' score chain residues temps = withSystemRandom $ \g -> do 
+            (x, i) <- metropolisHastings score generateCandidate chain g temps
+            printHP residues x
             putStrLn "----------------------------"
-            putStrLn (show $ last xs)
+            putStrLn (show x)
             putStrLn $ "Number of accepted transitions: " ++ (show i)
-            putStrLn $ "Final energy: " ++ show (energy residues $ last xs)
+            putStrLn $ "Final energy: " ++ show (energy residues x)
 
 -- TODO: lite felhantering kanske
 main :: IO ()

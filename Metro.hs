@@ -65,29 +65,17 @@ mHStep pi q state g = do
     else return state
 
 
-metropolisHastings :: PrimMonad m       =>
-                      Int               -> -- The number of iterations
-                      Pi s              -> -- The scoring function function
-                      Q m s             -> -- The candidate generating function
-                      s                 -> -- The initial state
-                      Gen (PrimState m) ->
-                      m ([s], Int)       
-metropolisHastings n p q s g = f n (MarkovChain s (p s) 0)
-  where
-    f 0 (MarkovChain x _ accpts) = return ([x], accpts)
-    f n s@(MarkovChain x _ _) = do
-      t <- mHStep p q s g
-      (xs, accpts) <- f (n-1) t
-      return (x:xs, accpts)
-
-
-p :: Pi Double
-p x = exp (-(x^2) / 2) / (sqrt (2 * pi))
-
-q :: PrimMonad m => Q m Double
-q x g = do
-  u <- uniformR (-0.5, 0.5) g
-  return $ Candidate (x+u) (1.0, 1.0)
-
-example :: Int -> Double -> GenIO -> IO ([Double], Int)
-example n x = metropolisHastings n p q x
+metropolisHastings :: (PrimMonad m) =>
+                   (Double -> Pi s) ->
+                   Q m s ->
+                   s ->
+                   Gen (PrimState m) ->
+                   [Double] ->
+                   m (s, Int)
+metropolisHastings p q ch gen (t:temps) = returnValue $ foldM f start temps
+    where
+        returnValue result = do
+                            MarkovChain ch _ acc <- result
+                            return (ch, acc)
+        start = MarkovChain ch (p t ch) 0
+        f current temp = mHStep (p temp) q current gen

@@ -8,7 +8,7 @@ module Print (
 import Chain
 import Coord
 import Moves
-import Energy
+import HPModel
 import qualified Data.Vector as V
 import Data.List (elemIndex)
 
@@ -17,9 +17,7 @@ printChain = putStr . showRows
 
 printHP :: V.Vector HPResidue -> Chain Coord2d -> IO ()
 printHP res ch = putStr $ showRowsWith disp ch
-    where disp i = case res V.! i of
-                   H -> "H"
-                   P -> "P"
+    where disp = show . (res V.!)
 
 printSimilar :: Chain Coord2d -> IO ()
 printSimilar ch = mapM_ f (pullMoves ch)

@@ -4,14 +4,13 @@ import Coord
 import Chain
 import Moves
 import Print
-import Energy
+import HPModel
 import Metro
 
 import System.Random.MWC
 import Control.Monad.Primitive
 import qualified Data.Vector as V
 import System.Environment
-import Data.Char (isDigit)
 
 -- Get probability for one list element given uniform distribution
 getProb :: [a] -> Double
@@ -30,14 +29,6 @@ generateCandidate ch gen = do
     let probBack = getProb $ pullMoves candidate
     return $ Candidate candidate (prob, probBack)
 
--- Create a list of residues from an input string
-createResidues :: String -> [HPResidue]
-createResidues [] = []
-createResidues (x:[]) = [read [x]]
-createResidues (x:y:xs) = if isDigit y
-                          then (replicate (read [y]) (read [x])) ++ createResidues xs
-                          else (read [x]) : (createResidues (y:xs))
-
 -- Generate a chain with a fixed length
 createChain :: Int -> Chain Coord2d
 createChain n = fromList [Coord2d 1 x | x <- [1..n]]
@@ -47,12 +38,12 @@ createChain n = fromList [Coord2d 1 x | x <- [1..n]]
 score :: (Coord a) => Chain a -> Double
 score ch = undefined -- exp $ - (energy myRes ch)
 
-run :: String -> String -> IO ()
+run :: String -> Int -> IO ()
 run input iterations = do    
     let residues = V.fromList $ createResidues input
     let chain = createChain (V.length residues)
     let score ch = exp $ - (energy residues ch)
-    run' score chain residues (read iterations)
+    run' score chain residues iterations
 
 -- Run the algorithm!
 run' score chain residues n = withSystemRandom $ \g -> 
@@ -64,7 +55,8 @@ run' score chain residues n = withSystemRandom $ \g ->
             putStrLn $ "Number of accepted transitions: " ++ (show i)
             putStrLn $ "Final energy: " ++ show (energy residues $ last xs)
 
+-- TODO: lite felhantering kanske
 main :: IO ()
 main = do
     (input:iterations:_) <- getArgs
-    run input iterations
+    run input (read iterations)

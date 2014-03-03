@@ -12,9 +12,11 @@ instance Show Coord2d where
    show (Coord2d x y) = "(" ++ show x ++ "x" ++ show y ++ ")"
 
 instance Coord Coord2d where
-    adj a b  = abs (xCoord a - xCoord b) + abs (yCoord a - yCoord b) == 1
+    adj a b  = abs (xCoord a - xCoord b) + 
+               abs (yCoord a - yCoord b) == 1
 
-    dadj a b = abs (xCoord a - xCoord b) == 1 && abs (yCoord a - yCoord b) == 1
+    dadj a b = abs (xCoord a - xCoord b) == 1 && 
+               abs (yCoord a - yCoord b) == 1
     
     neighbors (Coord2d x y) = [Coord2d (x+1) y, Coord2d x (y+1)]
 

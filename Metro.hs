@@ -6,7 +6,7 @@ module Metro (
              ) where
 
 import System.Random.MWC --This requires that the mwc-random
-
+import Debug.Trace
 import Control.Monad
 import Control.Monad.Primitive
 
@@ -52,13 +52,14 @@ mHStep :: PrimMonad m       =>
           Pi s              -> -- The scoring function 
           Q m s             -> -- The candidate generating function
           MarkovChain s     -> -- The current state of the markov chain
+          Double            -> -- The current temperature
           Gen (PrimState m) -> 
           m (MarkovChain s)
-mHStep pi q state g = do
+mHStep pi q state t g = do
   let (x, px, acpts) = (currentState state, currentValue state, accepts state)
   (Candidate y (qxy, qyx)) <- q x g
   let py = pi y
-  let a = min 1.0 ((qyx * py) / (qxy * px))
+  let a = min 1.0 $ exp (((qyx * py) - (qxy * px)) / t)
   u <- uniformR (0.0, 1.0) g
   if u <= a
     then return $ MarkovChain y py (acpts + 1)
@@ -66,7 +67,7 @@ mHStep pi q state g = do
 
 
 metropolisHastings :: (PrimMonad m) =>
-                   (Double -> Pi s) ->
+                   Pi s ->
                    Q m s ->
                    s ->
                    Gen (PrimState m) ->
@@ -77,5 +78,5 @@ metropolisHastings p q ch gen (t:temps) = returnValue $ foldM f start temps
         returnValue result = do
                             MarkovChain ch _ acc <- result
                             return (ch, acc)
-        start = MarkovChain ch (p t ch) 0
-        f current temp = mHStep (p temp) q current gen
+        start = MarkovChain ch (p ch) 0
+        f current temp = mHStep p q current temp gen

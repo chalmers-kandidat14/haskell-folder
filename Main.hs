@@ -36,18 +36,19 @@ createChain n = fromList [Coord2d 1 x | x <- [1..n]]
 
 generateTemps :: Int -> [Double]
 generateTemps n = [f t | t <- [0..n]]
-    where f = (*100000000000000000000000000000000) . exp . fromIntegral . (0-)
+    where f t = (1000 * (1 - (fromIntegral t)^2 / (fromIntegral n)^2))
 
 run :: String -> Int -> IO ()
 run input iterations = do    
     let residues = V.fromList $ createResidues input
     let chain = createChain (V.length residues)
     let temps = generateTemps iterations
-    let score temp ch = exp $ - ((energy residues ch) / temp)
+    let score ch = - (energy residues ch) 
     run' score chain residues temps
 
 -- Run the algorithm!
-run' score chain residues temps = withSystemRandom $ \g -> do 
+run' score chain residues temps = do 
+            g <- createSystemRandom
             (x, i) <- metropolisHastings score generateCandidate chain g temps
             printHP residues x
             putStrLn "----------------------------"

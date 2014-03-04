@@ -35,8 +35,18 @@ createChain n = fromList [Coord2d 1 x | x <- [1..n]]
 
 
 generateTemps :: Int -> [Double]
-generateTemps n = [f t | t <- [0..n]]
-    where f t = (1000 * (1 - (fromIntegral t)^2 / (fromIntegral n)^2))
+generateTemps n = [ef $ fromIntegral t | t <- [0..n]]
+	    where
+		ef :: Double -> Double
+		ef t = a * exp ((- t) * b / fromIntegral n)
+		a :: Double
+		a = 100
+		b :: Double
+		b = 100
+		pf :: Double -> Double
+		pf t = a * (1 - t / fromIntegral n) ^ p
+		p :: Int
+		p = 2
 
 run :: String -> Int -> IO ()
 run input iterations = do    

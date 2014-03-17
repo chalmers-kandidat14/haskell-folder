@@ -42,7 +42,7 @@ generateTemps n = [ef $ fromIntegral t | t <- [0..n]]
 		a :: Double
 		a = 100
 		b :: Double
-		b = 100
+		b = 10
 		pf :: Double -> Double
 		pf t = a * (1 - t / fromIntegral n) ^ p
 		p :: Int
@@ -60,11 +60,18 @@ run input iterations = do
 run' score chain residues temps = do 
             g <- createSystemRandom
             (x, i) <- metropolisHastings score generateCandidate chain g temps
-            printHP residues x
+	    printJGReadable x residues 
+
+printHReadable x i res = do
+            printHP res x
             putStrLn "----------------------------"
             putStrLn (show x)
             putStrLn $ "Number of accepted transitions: " ++ (show i)
-            putStrLn $ "Final energy: " ++ show (energy residues x)
+            putStrLn $ "Final energy: " ++ show (energy res x)
+
+printJGReadable x res = do
+	putStrLn $ unlines $ chainToJGList x $ V.toList res
+
 
 -- TODO: lite felhantering kanske
 main :: IO ()

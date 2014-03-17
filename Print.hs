@@ -3,6 +3,7 @@ module Print (
                printChain
              , printHP
              , printSimilar
+             , chainToJGList
              ) where
 
 import Chain
@@ -11,6 +12,13 @@ import Moves
 import HPModel
 import qualified Data.Vector as V
 import Data.List (elemIndex)
+
+chainToJGList :: Chain Coord2d -> [HPResidue] -> [String]
+chainToJGList ch hpl = zipWith format (toList ch) hpl
+	where
+		format coord hp = x coord ++ " " ++ y coord ++ " 0 " ++ show hp
+		x = show . xCoord
+		y = show . yCoord
 
 printChain :: Chain Coord2d -> IO ()
 printChain = putStr . showRows

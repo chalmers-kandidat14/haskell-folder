@@ -60,7 +60,7 @@ run input iterations = do
 run' score chain residues temps = do 
             g <- createSystemRandom
             (x, i) <- metropolisHastings score generateCandidate chain g temps
-	    printJGReadable x residues 
+            printJGReadable x residues 
 
 printHReadable x i res = do
             printHP res x
@@ -70,7 +70,7 @@ printHReadable x i res = do
             putStrLn $ "Final energy: " ++ show (energy res x)
 
 printJGReadable x res = do
-	putStrLn $ unlines $ chainToJGList x $ V.toList res
+        putStrLn $ unlines $ chainToJGList x $ V.toList res
 
 
 -- TODO: lite felhantering kanske

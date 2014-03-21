@@ -1,15 +1,46 @@
 module Coord where
 
-class (Eq a, Ord a) => Coord a where
+class (Show a, Eq a, Ord a) => Coord a where
     adj :: a -> a -> Bool
     dadj :: a -> a -> Bool
     neighbors :: a -> [a]
     neighborPairs :: a -> a -> [(a,a)]
+    generateList :: Int -> [a]
+
+data Coord3d = Coord3d {x3Coord :: Int, y3Coord :: Int, z3Coord :: Int} deriving (Ord, Eq)
+
+instance Show Coord3d where
+   show (Coord3d x y z) = show x ++ " " ++ show y ++  " " ++ show z
+
+instance Coord Coord3d where
+    adj a b  = abs (x3Coord a - x3Coord b) +
+               abs (y3Coord a - y3Coord b) +
+               abs (z3Coord a - z3Coord b) == 1
+
+    dadj a b = undefined
+    
+    generateList n = [Coord3d x 0 0| x <- [1..n]]
+
+    neighbors (Coord3d x y z) = [Coord3d (x+1) y z, Coord3d x (y+1) z, Coord3d x y (z+1)]
+
+    neighborPairs (Coord3d ax ay az) (Coord3d bx by bz)
+                | ax == bx = [ (Coord3d (ax+1) ay az, Coord3d (bx+1) by bz),
+                               (Coord3d (ax-1) ay az, Coord3d (bx-1) by bz) ,
+                               (Coord3d ax ay (az+1), Coord3d bx by (bz+1)),
+                               (Coord3d ax ay (az-1), Coord3d bx by (bz-1))]
+                | ay == by = [ (Coord3d ax (ay+1) az, Coord3d bx (by+1) bz),
+                               (Coord3d ax (ay-1) az, Coord3d bx (by-1) bz),
+                               (Coord3d ax ay (az+1), Coord3d bx by (bz+1)),
+                               (Coord3d ax ay (az-1), Coord3d bx by (bz-1)) ]
+                | az == bz = [ (Coord3d (ax+1) ay az, Coord3d (bx+1) by bz),
+                               (Coord3d (ax-1) ay az, Coord3d (bx-1) by bz),
+                               (Coord3d ax (ay+1) az, Coord3d bx (by+1) bz),
+                               (Coord3d ax (ay-1) az, Coord3d bx (by-1) bz) ]
 
 data Coord2d = Coord2d {xCoord :: Int, yCoord :: Int} deriving (Ord, Eq)
 
 instance Show Coord2d where
-   show (Coord2d x y) = "(" ++ show x ++ "x" ++ show y ++ ")"
+   show (Coord2d x y) = show x ++ " " ++ show y ++ " 0"
 
 instance Coord Coord2d where
     adj a b  = abs (xCoord a - xCoord b) + 
@@ -25,3 +56,4 @@ instance Coord Coord2d where
                                (Coord2d (ax-1) ay, Coord2d (bx-1) by) ]
                 | ay == by = [ (Coord2d ax (ay+1), Coord2d bx (by+1)),
                                (Coord2d ax (ay-1), Coord2d bx (by-1)) ]
+    generateList n = [Coord2d x 0 | x <- [1..n]]

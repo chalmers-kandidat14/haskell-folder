@@ -17,10 +17,10 @@ getProb :: [a] -> Double
 getProb list = fromRational $ 1 / (fromIntegral $ length list)
 
 -- Randomly select one candidate of all given pullMoves
-generateCandidate :: (PrimMonad m)    => 
-                    Chain Coord2d     -> 
+generateCandidate :: (PrimMonad m, Coord a)    => 
+                    Chain a     -> 
                     Gen (PrimState m) -> 
-                    m (Candidate (Chain Coord2d))
+                    m (Candidate (Chain a))
 generateCandidate ch gen = do 
     let list = pullMoves ch
     chosenMove <-  pick list gen
@@ -30,8 +30,8 @@ generateCandidate ch gen = do
     return $ Candidate candidate (prob, probBack)
 
 -- Generate a chain with a fixed length
-createChain :: Int -> Chain Coord2d
-createChain n = fromList [Coord2d 1 x | x <- [1..n]]
+createChain :: Coord a => Int -> Chain a
+createChain n = fromList $ generateList n
 
 
 generateTemps :: Int -> [Double]
@@ -51,12 +51,13 @@ generateTemps n = [ef $ fromIntegral t | t <- [0..n]]
 run :: String -> Int -> IO ()
 run input iterations = do    
     let residues = V.fromList $ createResidues input
-    let chain = createChain (V.length residues)
+    let chain = (createChain (V.length residues)) :: Chain Coord3d
     let temps = generateTemps iterations
     let score ch = - (energy residues ch) 
     run' score chain residues temps
 
 -- Run the algorithm!
+run' :: Coord a => (Chain a -> Double) -> Chain a -> V.Vector HPResidue -> [Double] -> IO() 
 run' score chain residues temps = do 
             g <- createSystemRandom
             (x, i) <- metropolisHastings score generateCandidate chain g temps

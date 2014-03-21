@@ -13,12 +13,10 @@ import HPModel
 import qualified Data.Vector as V
 import Data.List (elemIndex)
 
-chainToJGList :: Chain Coord2d -> [HPResidue] -> [String]
+chainToJGList :: Coord a => Chain a -> [HPResidue] -> [String]
 chainToJGList ch hpl = zipWith format (toList ch) hpl
 	where
-		format coord hp = x coord ++ " " ++ y coord ++ " 0 " ++ show hp
-		x = show . xCoord
-		y = show . yCoord
+		format coord hp = show coord ++ " " ++ show hp
 
 printChain :: Chain Coord2d -> IO ()
 printChain = putStr . showRows

@@ -1,6 +1,7 @@
 module Coord (
                Coord (..)
              , Coord3d 
+             , CoordFCC
              , Coord2d
              , getMin
              , getMax
@@ -44,6 +45,40 @@ instance Coord Coord3d where
                                (Coord3d ax (ay+1) az, Coord3d bx (by+1) bz),
                                (Coord3d ax (ay-1) az, Coord3d bx (by-1) bz) ]
 
+data CoordFCC = CoordFCC { xFCC :: Int, yFCC :: Int, zFCC :: Int } deriving (Ord, Eq)
+
+instance Show CoordFCC where
+    show (CoordFCC x y z) = show x ++ " " ++ show y ++ " " ++ show z
+
+instance Coord CoordFCC where
+    adj a b = abs (xFCC a - xFCC b) <= 1 &&
+              abs (yFCC a - yFCC b) <= 1 &&
+              abs (zFCC a - zFCC b) <= 1 &&
+              abs (xFCC a - xFCC b) +
+              abs (yFCC a - yFCC b) + 
+              abs (zFCC a - zFCC b) == 2
+    
+    dadj a b = undefined
+
+    generateList n = map createCoord $ zip3 [0..n] (cycle [0, 1, 0, 0]) (cycle [0, 0, 0, 1])
+        where 
+            createCoord (x, y, z) = CoordFCC x y z
+
+    neighbors (CoordFCC x y z) = [ CoordFCC x     (y+1) (z+1)
+                                 , CoordFCC x     (y-1) (z+1)
+                                 , CoordFCC x     (y+1) (z-1)
+                                 , CoordFCC x     (y-1) (z-1)
+                                 , CoordFCC (x+1) (y+1) z
+                                 , CoordFCC (x-1) (y+1) z
+                                 , CoordFCC (x+1) (y-1) z
+                                 , CoordFCC (x-1) (y-1) z
+                                 , CoordFCC (x+1) y     (z+1)
+                                 , CoordFCC (x-1) y     (z+1)
+                                 , CoordFCC (x+1) y     (z-1)
+                                 , CoordFCC (x-1) y     (z-1) ]
+
+    neighborPairs a b = undefined
+ 
 data Coord2d = Coord2d {xCoord :: Int, yCoord :: Int} deriving (Ord, Eq)
 
 instance Show Coord2d where

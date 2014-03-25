@@ -6,7 +6,6 @@ module HPModel (
 
 import Chain
 import Coord
-
 import qualified Data.Vector as V
 import Data.Maybe (catMaybes, mapMaybe)
 import Data.Char (isDigit)

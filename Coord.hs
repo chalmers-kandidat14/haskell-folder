@@ -1,4 +1,11 @@
-module Coord where
+module Coord (
+               Coord (..)
+             , Coord3d 
+             , Coord2d
+             , getMin
+             , getMax
+             , createCoords
+             ) where
 
 class (Show a, Eq a, Ord a) => Coord a where
     adj :: a -> a -> Bool
@@ -57,3 +64,18 @@ instance Coord Coord2d where
                 | ay == by = [ (Coord2d ax (ay+1), Coord2d bx (by+1)),
                                (Coord2d ax (ay-1), Coord2d bx (by-1)) ]
     generateList n = [Coord2d x 0 | x <- [1..n]]
+
+
+createCoords :: [Int] -> [Int] -> [Coord2d]
+createCoords xs ys = [Coord2d x y | x <- xs, y <- ys]
+
+getMin :: [Coord2d] -> (Int, Int)
+getMin list = ((f xCoord list), (f yCoord list)) 
+    where
+       f fun = minimum . map fun 
+
+getMax :: [Coord2d] -> (Int, Int)
+getMax list = ((f xCoord list), (f yCoord list))
+    where
+        f fun = maximum . map fun
+

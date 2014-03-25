@@ -2,7 +2,6 @@
 module Print (
                printChain
              , printHP
-             , printSimilar
              , chainToJGList
              ) where
 
@@ -19,33 +18,26 @@ chainToJGList ch hpl = zipWith format (toList ch) hpl
 		format coord hp = show coord ++ " " ++ show hp
 
 printChain :: Chain Coord2d -> IO ()
-printChain = putStr . showRows
+printChain = putStr . show
 
 printHP :: V.Vector HPResidue -> Chain Coord2d -> IO ()
 printHP res ch = putStr $ showRowsWith disp ch
     where disp = show . (res V.!)
 
-printSimilar :: Chain Coord2d -> IO ()
-printSimilar ch = mapM_ f (pullMoves ch)
-    where f m = putStrLn "------" >> (printChain . after $ m)
-
 showRowsWith :: (Int -> String) -> Chain Coord2d -> String
 showRowsWith disp chain = unlines $ map (showRowWith disp coords) [yMin..yMax]
     where
         coords = toList chain
-        yMin = minimum . map yCoord $ coords
-        yMax = maximum . map yCoord $ coords
-
-showRows :: Chain Coord2d -> String
-showRows = showRowsWith show 
+        yMin = snd $ getMin coords
+        yMax = snd $ getMax coords
 
 showRowWith ::  (Int -> String) -> [Coord2d] -> Int -> String
 showRowWith disp chain j = 
     foldr print "" gridrow
     where
-        gridrow = [Coord2d x j | x <- [xMin..xMax]]
-        xMin = minimum . map xCoord $ chain
-        xMax = maximum . map xCoord $ chain
+        gridrow = createCoords [xMin..xMax] [j]
+        xMin = fst $ getMin chain
+        xMax = fst $ getMax chain
         addSpace str =  if length str < 3
                         then addSpace (' ':str)
                         else str
@@ -54,5 +46,5 @@ showRowWith disp chain j =
                                 Just i -> addSpace (disp i) ++ output
 
 instance Show (Chain Coord2d) where
-        show = showRows
+        show = (showRowsWith show)
 

@@ -77,7 +77,7 @@ instance Coord CoordFCC where
                                  , CoordFCC (x+1) y     (z-1)
                                  , CoordFCC (x-1) y     (z-1) ]
 
-    neighborPairs a b = (CoordFCC ax ay az) (CoordFCC bx by bz)
+    neighborPairs (CoordFCC ax ay az) (CoordFCC bx by bz)
                | ax == bx = [ (CoordFCC ax (ay-1) (az-1), CoordFCC bx (by-1) (bz-1)) 
                             , (CoordFCC ax (ay+1) (az+1), CoordFCC bx (by+1) (bz+1)) 
                             , (CoordFCC (ax+1) ay (az+1), CoordFCC (bx+1) by (bz+1))

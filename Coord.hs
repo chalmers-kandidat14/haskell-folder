@@ -144,6 +144,7 @@ instance Coord Coord2d where
                                (Coord2d ax (ay-1), Coord2d bx (by-1)) ]
     generateList n = [Coord2d x 0 | x <- [1..n]]
 
+{- Some functions for printing the 2d chain in the terminal, see Print.hs -}
 
 createCoords :: [Int] -> [Int] -> [Coord2d]
 createCoords xs ys = [Coord2d x y | x <- xs, y <- ys]

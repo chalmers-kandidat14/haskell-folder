@@ -22,9 +22,14 @@ translateAAtoHP = map (\x -> (x, lookup x aaTable))
 translate :: [AA] -> [HP]
 translate = map f . translateAAtoHP
   where
-    f (aa, Nothing) = error ("Could not match the amino acid \"" ++ aa ++ "\" with any entry in the dictionary.")
+    f (aa, Nothing) = error ("Could not match the amino acid \""
+                            ++ aa ++ "\" with any entry in the dictionary.")
     f (aa, Just x)  = x
 
 main :: IO ()
-main = getArgs >>= putStrLn . unwords . translate . map (map toUpper) . concatMap (concatMap (words) . lines)
+main = getArgs >>= putStrLn
+                   . unwords
+                   . translate
+                   . map (map toUpper)
+                   . concatMap (concatMap (words) . lines)
 

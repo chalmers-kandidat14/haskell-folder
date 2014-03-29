@@ -17,7 +17,9 @@ data PullMoveState a = PMState {
                                 possMoves ::  (V.Vector (Chain a))
                                 }
 
-genPullCand :: (PrimMonad m, Coord a) => Gen (PrimState m) -> PullMoveState a -> m (Candidate (PullMoveState a))
+genPullCand :: (PrimMonad m, Coord a) => Gen (PrimState m) 
+                                      -> PullMoveState a 
+                                      -> m (Candidate (PullMoveState a))
 genPullCand gen (PMState _ pMoves) = do
     candChain <- pick pMoves gen
     let candPMoves = V.fromList $ map after $ pullMoves candChain
@@ -49,9 +51,9 @@ generateTemps n = [ef $ fromIntegral t | t <- [0..n]]
 		ef :: Double -> Double
 		ef t = a * exp ((- t) * b / fromIntegral n)
 		a :: Double
-		a = 100
+		a = 1
 		b :: Double
-		b = 10
+		b = 1000
 		pf :: Double -> Double
 		pf t = a * (1 - t / fromIntegral n) ^ p
 		p :: Int
@@ -60,8 +62,15 @@ generateTemps n = [ef $ fromIntegral t | t <- [0..n]]
 expQuota :: Double -> Double -> Double -> Double
 expQuota chx chy t = exp ((chx - chy) / t)
 
-expScore :: Coord a => V.Vector HPResidue -> PullMoveState a -> PullMoveState a -> Double -> Double
-expScore residues chx chy t = expQuota (-(energy residues $ currState chx)) (-(energy residues $ currState chy)) t
+expScore :: Coord a => V.Vector HPResidue 
+                    -> PullMoveState a 
+                    -> PullMoveState a 
+                    -> Double 
+                    -> Double
+expScore residues chx chy t = expQuota before after t
+    where 
+        before = -(energy residues $ currState chx) 
+        after =  -(energy residues $ currState chy)
 
 run :: String -> Int -> IO ()
 run input iterations = do    

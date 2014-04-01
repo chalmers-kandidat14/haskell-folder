@@ -75,12 +75,12 @@ expScore residues chx chy t = expQuota before after t
 run :: String -> Int -> IO ()
 run input iterations = do    
     let residues = V.fromList $ createResidues input
-    let chain = (createChain (V.length residues)) :: Chain Coord2d 
+    let chain = (createChain (V.length residues)) :: Chain CoordFCC 
     let temps = generateTemps iterations
     g <- createSystemRandom
     let init = makePMS chain
     res <- metropolisHastings (expScore residues) (genPullCand g) g init temps 
-    printHReadable (currState $ head res) (length res) residues
+    printJGReadable (currState $ head res) (length res) residues
 
 printHReadable x i res = do
             printHP res x
@@ -89,7 +89,7 @@ printHReadable x i res = do
             putStrLn $ "Number of accepted transitions: " ++ (show i)
             putStrLn $ "Final energy: " ++ show (energy res x)
 
-printJGReadable x res = do
+printJGReadable x i res = do
         putStrLn $ unlines $ chainToJGList x $ V.toList res
 
 

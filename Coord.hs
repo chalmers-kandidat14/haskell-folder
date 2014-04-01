@@ -68,7 +68,7 @@ instance Coord CoordFCC where
     
     dadj a b = undefined
 
-    generateList n = map createCoord $ zip3 [0..n] ys zs
+    generateList n = map createCoord $ zip3 [0..(n-1)] ys zs
         where 
             ys = cycle [0, 1, 0, 0]
             zs = cycle [0, 0, 0, 1]

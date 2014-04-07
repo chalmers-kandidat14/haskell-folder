@@ -2,6 +2,7 @@ module HPModel (
                  energy
                , HPResidue
                , createResidues
+               , isHydrophobic
                ) where
 
 import Chain
@@ -18,6 +19,10 @@ data HPResidue = H | P deriving (Show, Read)
 instance NeighborResidue HPResidue where
     residueEnergy H H = -1
     residueEnergy _ _ = 0
+
+isHydrophobic :: HPResidue -> Bool
+isHydrophobic H = True
+isHydrophobic _ = False
 
 -- Create a list of residues from an input string
 createResidues :: String -> [HPResidue]

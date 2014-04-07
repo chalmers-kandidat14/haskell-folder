@@ -1,4 +1,4 @@
-module Main (main) where
+module Main (main, run) where
 
 import Coord
 import Chain
@@ -72,15 +72,16 @@ expScore residues chx chy t = expQuota before after t
         before = -(energy residues $ currState chx) 
         after =  -(energy residues $ currState chy)
 
-run :: String -> Int -> IO ()
+run :: Coord a => String -> Int -> IO [Chain a] 
 run input iterations = do    
     let residues = V.fromList $ createResidues input
-    let chain = (createChain (V.length residues)) :: Chain CoordFCC 
+    let chain = (createChain (V.length residues))
     let temps = generateTemps iterations
     g <- createSystemRandom
     let init = makePMS chain
     res <- metropolisHastings (expScore residues) (genPullCand g) g init temps 
     printJGReadable (currState $ head res) (length res) residues
+    return $ map currState res
 
 printHReadable x i res = do
             printHP res x
@@ -92,9 +93,13 @@ printHReadable x i res = do
 printJGReadable x i res = do
         putStrLn $ unlines $ chainToJGList x $ V.toList res
 
+type FCC = [Chain CoordFCC]
+type C2d = [Chain Coord2d]
+type C3d = [Chain Coord3d]
 
 -- TODO: lite felhantering kanske
 main :: IO ()
 main = do
     (input:iterations:_) <- getArgs
-    run input (read iterations)
+    run input (read iterations) :: IO FCC
+    return ()

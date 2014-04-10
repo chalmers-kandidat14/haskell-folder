@@ -1,4 +1,4 @@
-module SimpleMain where
+module Main where
 import Folder
 import HPModel
 import System.Environment

@@ -2,7 +2,7 @@
  Module for assessing similarity between two chains
 -}
 
-module Similarity (similarity) where
+module Similarity where
 
 import Main
 import Chain

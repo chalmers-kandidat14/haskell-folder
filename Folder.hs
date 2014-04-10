@@ -46,7 +46,7 @@ createChain n = fromList $ generateList n
 
 
 generateTemps :: Int -> [Double]
-generateTemps n = [ef $ fromIntegral t | t <- [0..n]]
+generateTemps n = [pf $ fromIntegral t | t <- [0..n]]
 	    where
 		ef :: Double -> Double
 		ef t = a * exp ((- t) * b / fromIntegral n)
@@ -82,6 +82,7 @@ run input iterations = do
     res <- metropolisHastings (expScore residues) (genPullCand g) g init temps 
     return $ map currState res
 
+printHReadable :: Chain Coord2d -> Int -> V.Vector HPResidue -> IO ()
 printHReadable x i res = do
             printHP res x
             putStrLn "----------------------------"
@@ -89,6 +90,7 @@ printHReadable x i res = do
             putStrLn $ "Number of accepted transitions: " ++ (show i)
             putStrLn $ "Final energy: " ++ show (energy res x)
 
+printJGReadable :: Coord a => Chain a -> Int -> [HPResidue] -> IO ()
 printJGReadable x i res = do
         putStrLn $ unlines $ chainToJGList x res
 

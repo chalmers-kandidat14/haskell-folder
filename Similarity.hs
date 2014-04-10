@@ -35,7 +35,7 @@ type Graph = [[Int]]
 printGraph :: Graph -> String
 printGraph = unlines . map (unwords . map show) 
 
-buildConnectionMatrix :: (Coord a) => [HPResidue] -> Chain a -> [[Int]]
+buildConnectionMatrix :: (Coord a) => [HPResidue] -> Chain a -> Graph
 buildConnectionMatrix res ch = map f indices
     where
         f = intersect indices .

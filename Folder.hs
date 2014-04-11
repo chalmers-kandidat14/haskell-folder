@@ -82,13 +82,13 @@ run input iterations = do
     res <- metropolisHastings (expScore residues) (genPullCand g) g init temps 
     return $ map currState res
 
-printHReadable :: Chain Coord2d -> Int -> V.Vector HPResidue -> IO ()
+printHReadable :: Chain Coord2d -> Int -> [HPResidue] -> IO ()
 printHReadable x i res = do
             printHP res x
             putStrLn "----------------------------"
             putStrLn (show x)
             putStrLn $ "Number of accepted transitions: " ++ (show i)
-            putStrLn $ "Final energy: " ++ show (energy res x)
+            putStrLn $ "Final energy: " ++ show (energy (V.fromList res) x)
 
 printJGReadable :: Coord a => Chain a -> Int -> [HPResidue] -> IO ()
 printJGReadable x i res = do

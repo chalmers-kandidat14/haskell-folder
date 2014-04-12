@@ -4,7 +4,6 @@
 
 module Similarity where
 
-import Main
 import Chain
 import HPModel
 import Coord
@@ -23,8 +22,8 @@ similarity res ch ch' = foldr f 0 $ zip a b
         overlap xs ys = xs `intersect` ys
        
         connections = sum (concat a)
-        a = buildConnectionMatrix res ch
-        b = buildConnectionMatrix res ch'
+        a = buildGraph res ch
+        b = buildGraph res ch'
 
 -- Builds a matrix with the the connections for each residue (row)
 -- observe that each connection is only counted once, so the matrix
@@ -35,8 +34,8 @@ type Graph = [[Int]]
 printGraph :: Graph -> String
 printGraph = unlines . map (unwords . map show) 
 
-buildConnectionMatrix :: (Coord a) => [HPResidue] -> Chain a -> Graph
-buildConnectionMatrix res ch = map f indices
+buildGraph :: (Coord a) => [HPResidue] -> Chain a -> Graph
+buildGraph res ch = map f indices
     where
         f = intersect indices .
             mapMaybe (cIndex ch) . 

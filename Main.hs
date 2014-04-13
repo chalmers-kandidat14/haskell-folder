@@ -9,8 +9,8 @@ import System.Directory (createDirectoryIfMissing)
 
 runLarge = do
     let residues = createResidues "HPH2P2H4PH3P2H2P2HPH3PHPH2P2H2P3HP8H2"
-    let n = 2
-    let iterations = 100
+    let n = 1000
+    let iterations = 10000
     let writeOut i res = do
                         writeFile ("output/chain-" ++ show i ++ ".txt")
                                   (unlines $ chainToJGList (head res) residues)

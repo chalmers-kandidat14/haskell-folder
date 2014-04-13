@@ -1,8 +1,9 @@
 module Main where
 import Folder
 import HPModel
+import GraphConverter
 import Similarity
-import Print (chainToJGList)
+import Print (chainToJGList) 
 import Control.Monad (forM_)
 import System.Environment
 import System.Directory (createDirectoryIfMissing)
@@ -51,6 +52,7 @@ main = do
     
     args <- getArgs
     case args of
+        ["convert-graph", file] -> convertAndPrintFile file
         [input, iterations] -> runFCC input iterations 
         ["-l", "fcc", input, iterations] -> runFCC input iterations       
         ["-l", "2d", input, iterations] -> run2d input iterations

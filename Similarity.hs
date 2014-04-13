@@ -10,7 +10,7 @@ import Coord
 
 import Data.List (intersect)
 import Data.Maybe (mapMaybe, catMaybes)
-
+import GraphConverter
 
 similarity :: Coord a => [HPResidue] -> Chain a -> Chain a -> Int
 similarity res ch ch' = foldr f 0 $ zip a b 
@@ -32,7 +32,7 @@ similarity res ch ch' = foldr f 0 $ zip a b
 type Graph = [[Int]]
 
 printGraph :: Graph -> String
-printGraph = unlines . map (unwords . map show) 
+printGraph = unlines . map (unwords . map show) . convertGraph 
 
 buildGraph :: (Coord a) => [HPResidue] -> Chain a -> Graph
 buildGraph res ch = map f indices

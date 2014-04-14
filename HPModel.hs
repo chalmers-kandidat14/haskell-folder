@@ -1,5 +1,6 @@
 module HPModel (
                  energy
+               , energyWithList
                , HPResidue
                , createResidues
                , isHydrophobic
@@ -38,7 +39,10 @@ energy res ch = fromIntegral $ V.ifoldl f 0 res
         f acc i x = acc + ( foldr ((+) . residueEnergy x . (res V.!)) 0 $ 
                     mapMaybe (cIndex ch) $ 
                     validNeighbors ch i )
-        
+
+energyWithList :: (Coord a, NeighborResidue n) => [n] -> Chain a -> Double
+energyWithList res = energy (V.fromList res)
+
 validNeighbors :: (Coord a) => Chain a -> Int -> [a]
 validNeighbors ch i = filter (notNextTo ch i) (neighbors (ch!i))
 

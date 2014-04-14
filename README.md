@@ -12,8 +12,9 @@ Then run:
     $ cabal build
     $ cabal install
 
-There is now a runnable file in the location "<path to project>/dist/pfolder/pfolder".
-On windows, it is called "pfolder.exe".
+There is now a runnable file in the location 
+"(path to project)/dist/pfolder/pfolder". On windows, it is called 
+"pfolder.exe".
 
 To see how it is used run it with
 

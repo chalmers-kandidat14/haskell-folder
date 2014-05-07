@@ -38,4 +38,4 @@ The different lattice types is 2d, 2d-r, 3d, fcc (default: fcc) where
 To make a large run of the algorithm where the chain is folded several times
 you use the following command:
     
-    $ pfolder large <residues> <iterations> <number of runs>
+    $ pfolder large <latticetype> <residues> <iterations> <number of runs>

@@ -10,24 +10,27 @@ import Control.Monad (forM_)
 import System.Environment
 import System.Directory (createDirectoryIfMissing)
 
-runLarge input iter repeats = do
+runLarge input iter repeats lattice= do
     let residues = createResidues input
     let iterations = read iter :: Int
     let n = read repeats :: Int
-    let writeOut energyH i res = do
+    createDirectoryIfMissing True "output/graphs"
+    createDirectoryIfMissing True "output/chains"
+    energyHandle <- openFile "output/energies.csv" WriteMode
+    let writeOut i res = do
                         writeFile ("output/chains/chain-" ++ show i ++ ".csv")
                                   (unlines $ map show $ toList (head res))
                         writeFile ("output/graphs/graph-" ++ show i ++ ".csv")
                                   (printGraph $ buildGraph residues (head res))
-                        hPutStrLn energyH 
+                        hPutStrLn energyHandle 
                                   (show $ energyWithList residues $ head res)
                         putStrLn $ "Finished number " ++ show i ++ " of " ++ show n
-    
-    createDirectoryIfMissing True "output/graphs"
-    createDirectoryIfMissing True "output/chains"
-    energyHandle <- openFile "output/energies.csv" WriteMode
     writeFile "output/residues.csv" (unlines $ map show residues)
-    forM_ [1..n] (\i -> (run residues iterations :: IO FCC) >>= (writeOut energyHandle i))
+    let runfunc i = case lattice of
+			"2d" -> (run residues iterations :: IO C2d) >>= writeOut i
+			"3d" -> (run residues iterations :: IO C3d) >>= writeOut i
+			"fcc" -> (run residues iterations :: IO FCC) >>= writeOut i
+    forM_ [1..n] runfunc
     hClose energyHandle
     putStrLn "Saved results in folder 'output'"
 
@@ -56,7 +59,7 @@ printHelp = do
     putStrLn ""
     putStrLn "Lattice types: 2d, 2d-r, 3d, fcc (default: fcc)"
     putStrLn ""
-    putStrLn "Large run: pfolder large <residues> <iterations> <number of runs>"
+    putStrLn "Large run: pfolder large <latticetype> <residues> <iterations> <number of runs>"
 
 
 main :: IO ()
@@ -70,7 +73,7 @@ main = do
         ["-l", "2d", input, iterations] -> run2d input iterations
         ["-l", "2d-r", input, iterations] -> run2dReadable input iterations 
         ["-l", "3d", input, iterations] -> run3d input iterations
-        ["large", input, iter, repeats] -> runLarge input iter repeats
+        ["large", lattice, input, iter, repeats] -> runLarge input iter repeats lattice
         ["-h"] -> printHelp
         [] -> printHelp
         _ -> putStrLn "Error: Invalid arguments" >> printHelp

@@ -26,6 +26,8 @@ runLarge input iter repeats lattice= do
                                   (show $ energyWithList residues $ head res)
                         putStrLn $ "Finished number " ++ show i ++ " of " ++ show n
     writeFile "output/residues.csv" (unlines $ map show residues)
+    writeFile "output/iterations" $ show iter
+    writeFile "output/lattice" $ show lattice
     let runfunc i = case lattice of
 			"2d" -> (run residues iterations :: IO C2d) >>= writeOut i
 			"3d" -> (run residues iterations :: IO C3d) >>= writeOut i

@@ -63,11 +63,11 @@ expQuota :: Double -> Double -> Double -> Double
 expQuota chx chy t = exp ((chx - chy) / t)
 
 expScore :: Coord a => V.Vector HPResidue 
-                    -> PullMoveState a 
-                    -> PullMoveState a 
                     -> Double 
+                    -> PullMoveState a 
+                    -> PullMoveState a 
                     -> Double
-expScore residues chx chy t = expQuota before after t
+expScore residues t chx chy = expQuota before after t
     where 
         before = -(energy residues $ currState chx) 
         after =  -(energy residues $ currState chy)

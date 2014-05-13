@@ -1,7 +1,7 @@
 module Coord (
                Coord (..)
-             , Coord3d 
-             , CoordFCC
+             , Coord3d (..)
+             , CoordFCC (..)
              , Coord2d (..)
              , getMin
              , getMax
@@ -58,6 +58,7 @@ data CoordFCC = CoordFCC { xFCC :: Int
 instance Show CoordFCC where
     show (CoordFCC x y z) = show x ++ " " ++ show y ++ " " ++ show z
 
+
 instance Coord CoordFCC where
     adj a b = abs (xFCC a - xFCC b) <= 1 &&
               abs (yFCC a - yFCC b) <= 1 &&
@@ -80,6 +81,7 @@ instance Coord CoordFCC where
                                  , CoordFCC (x-1) (y+1) z
                                  , CoordFCC (x+1) y     (z+1)
                                  , CoordFCC (x-1) y     (z+1)
+                                 ]
 
     neighborPairs (CoordFCC ax ay az) (CoordFCC bx by bz)
        | ax == bx = [ (CoordFCC ax (ay-1) (az-1), CoordFCC bx (by-1) (bz-1)) 

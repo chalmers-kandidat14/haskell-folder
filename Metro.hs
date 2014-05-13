@@ -47,7 +47,7 @@ metropolisHastings :: (PrimMonad m) =>
                    s ->
                    [p] ->
                    m [s]
-metropolisHastings scoref candf g init params = liftM currState $ foldM f start params
+metropolisHastings scoref candf g init params = liftM bestState $ foldM f start params
     where
         start = MetroState [init] [init]
         f marx t = do

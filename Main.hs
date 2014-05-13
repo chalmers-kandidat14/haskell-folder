@@ -21,7 +21,7 @@ runLarge input iter repeats lattice= do
                         writeFile ("output/chains/chain-" ++ show i ++ ".csv")
                                   (unlines $ map show $ toList (head res))
                         writeFile ("output/graphs/graph-" ++ show i ++ ".csv")
-                                  (printGraph $ buildGraph residues (head res))
+                                  (printGraph $ buildGraph (head res))
                         hPutStrLn energyHandle 
                                   (show $ energyWithList residues $ head res)
                         putStrLn $ "Finished number " ++ show i ++ " of " ++ show n

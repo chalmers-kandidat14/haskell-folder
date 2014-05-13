@@ -2,6 +2,7 @@ module GraphConverter where
 
 import Data.List
 
+-- Converts graphs from old format to new
 convertAndPrintFile :: String -> IO()
 convertAndPrintFile file = do
     content <- readFile file

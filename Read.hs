@@ -24,3 +24,13 @@ fromNumGrid grid = Chain.fromList $ map resCoord [1..(maxRes grid)]
 csvToNumGrid :: String -> [[Int]]
 csvToNumGrid str = let Right csv = Text.CSV.parseCSV "" str in map (map read) csv
 
+readFCC :: String -> CoordFCC
+readFCC str = CoordFCC (read $ xs!!0) (read $ xs!!1) (read $ xs!!2)
+    where
+        xs = words str
+
+read3D :: String -> Coord3d
+read3D str = Coord3d (read $ xs!!0) (read $ xs!!1) (read $ xs!!2)
+    where
+        xs = words str
+

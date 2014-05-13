@@ -76,16 +76,10 @@ instance Coord CoordFCC where
 
     neighbors (CoordFCC x y z) = [ CoordFCC x     (y+1) (z+1)
                                  , CoordFCC x     (y-1) (z+1)
-                                 , CoordFCC x     (y+1) (z-1)
-                                 , CoordFCC x     (y-1) (z-1)
                                  , CoordFCC (x+1) (y+1) z
                                  , CoordFCC (x-1) (y+1) z
-                                 , CoordFCC (x+1) (y-1) z
-                                 , CoordFCC (x-1) (y-1) z
                                  , CoordFCC (x+1) y     (z+1)
                                  , CoordFCC (x-1) y     (z+1)
-                                 , CoordFCC (x+1) y     (z-1)
-                                 , CoordFCC (x-1) y     (z-1) ]
 
     neighborPairs (CoordFCC ax ay az) (CoordFCC bx by bz)
        | ax == bx = [ (CoordFCC ax (ay-1) (az-1), CoordFCC bx (by-1) (bz-1)) 

@@ -58,6 +58,8 @@ generateTemps n = [pf $ fromIntegral t | t <- [0..n]]
 		pf t = a * (1 - t / fromIntegral n) ^ p
 		p :: Int
 		p = 2
+		ilf :: Double -> Double
+		ilf t = 10 / (log (t+2))
 
 expQuota :: Double -> Double -> Double -> Double
 expQuota chx chy t = exp ((chx - chy) / t)
@@ -67,20 +69,20 @@ expScore :: Coord a => V.Vector HPResidue
                     -> PullMoveState a 
                     -> PullMoveState a 
                     -> Double
-expScore residues t chx chy = expQuota before after t
+expScore residues t chx chy = if t == (-1.0) then -(energy residues $ currState chx) else expQuota before after t
     where 
         before = -(energy residues $ currState chx) 
         after =  -(energy residues $ currState chy)
 
-run :: Coord a => [HPResidue] -> Int -> IO [Chain a] 
+run :: Coord a => [HPResidue] -> Int -> IO ([Chain a], [Double]) 
 run input iterations = do    
     let residues = V.fromList input
     let chain = (createChain (V.length residues))
     let temps = generateTemps iterations
     g <- createSystemRandom
     let init = makePMS chain
-    res <- metropolisHastings (expScore residues) (genPullCand g) g init temps 
-    return $ map currState res
+    (res, ens) <- metropolisHastings (expScore residues) (genPullCand g) g init temps 
+    return (map currState res, ens)
 
 printHReadable :: Chain Coord2d -> Int -> [HPResidue] -> IO ()
 printHReadable x i res = do
